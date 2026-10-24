@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>School Management System</title>
+
+<style>
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:Segoe UI, sans-serif;
+}
+
+body{
+    background:#f4f6f9;
+}
+
+.header{
+    background:#2c3e50;
+    color:white;
+    padding:15px;
+    text-align:center;
+}
+
+.container{
+    width:90%;
+    margin:20px auto;
+}
+
+.form-box{
+    background:white;
+    padding:20px;
+    border-radius:10px;
+    box-shadow:0 2px 5px rgba(0,0,0,.1);
+}
+
+input{
+    width:100%;
+    padding:10px;
+    margin:8px 0;
+    border:1px solid #ddd;
+    border-radius:5px;
+}
+
+button{
+    background:#3498db;
+    color:white;
+    border:none;
+    padding:10px 15px;
+    cursor:pointer;
+    border-radius:5px;
+}
+
+button:hover{
+    background:#2980b9;
+}
+
+.table-box{
+    margin-top:20px;
+    background:white;
+    padding:20px;
+    border-radius:10px;
+    box-shadow:0 2px 5px rgba(0,0,0,.1);
+}
+
+table{
+    width:100%;
+    border-collapse:collapse;
+}
+
+th,td{
+    border:1px solid #ddd;
+    padding:10px;
+    text-align:left;
+}
+
+th{
+    background:#3498db;
+    color:white;
+}
+
+.delete-btn{
+    background:red;
+}
+</style>
+</head>
+<body>
+
+<div class="header">
+    <h1>🏫 School Management System</h1>
+</div>
+
+<div class="container">
+
+    <div class="form-box">
+        <h2>Add Student</h2>
+
+        <input type="text" id="studentId" placeholder="Student ID">
+        <input type="text" id="studentName" placeholder="Student Name">
+        <input type="text" id="studentClass" placeholder="Class">
+        <input type="text" id="studentPhone" placeholder="Phone">
+
+        <button onclick="addStudent()">Add Student</button>
+    </div>
+
+    <div class="table-box">
+        <h2>Student List</h2>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Name</th>
+                    <th>Class</th>
+                    <th>Phone</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+
+            <tbody id="studentTable"></tbody>
+        </table>
+    </div>
+
+</div>
+
+<script>
+
+let students = JSON.parse(localStorage.getItem("students")) || [];
+
+function saveData(){
+    localStorage.setItem("students", JSON.stringify(students));
+}
+
+function displayStudents(){
+
+    let table = document.getElementById("studentTable");
+    table.innerHTML = "";
+
+    students.forEach((student,index)=>{
+
+        table.innerHTML += `
+            <tr>
+                <td>${student.id}</td>
+                <td>${student.name}</td>
+                <td>${student.className}</td>
+                <td>${student.phone}</td>
+                <td>
+                    <button class="delete-btn"
+                    onclick="deleteStudent(${index})">
+                    Delete
+                    </button>
+                </td>
+            </tr>
+        `;
+    });
+}
+
+function addStudent(){
+
+    let id = document.getElementById("studentId").value;
+    let name = document.getElementById("studentName").value;
+    let className = document.getElementById("studentClass").value;
+    let phone = document.getElementById("studentPhone").value;
+
+    if(id==="" || name===""){
+        alert("Please enter student information");
+        return;
+    }
+
+    students.push({
+        id,
+        name,
+        className,
+        phone
+    });
+
+    saveData();
+    displayStudents();
+
+    document.getElementById("studentId").value="";
+    document.getElementById("studentName").value="";
+    document.getElementById("studentClass").value="";
+    document.getElementById("studentPhone").value="";
+}
+
+function deleteStudent(index){
+
+    students.splice(index,1);
+
+    saveData();
+    displayStudents();
+}
+
+displayStudents();
+
+</script>
+
+</body>
+</html>
+
